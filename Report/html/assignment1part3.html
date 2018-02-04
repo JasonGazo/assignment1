@@ -1,0 +1,770 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Assignment#1-Part 3:Enhancements</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-02-04"><meta name="DC.source" content="assignment1part3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1><b>Assignment#1-Part 3:Enhancements</b></h1><pre class="codeinput"><span class="comment">%Jason Gazo (100975245)                                  Date: Feb/04/2018</span>
+<span class="comment">%</span>
+<span class="comment">% *%%Introduction*</span>
+<span class="comment">%The purpose of this part of the experiment is to observe the movement of</span>
+<span class="comment">%electrons moving inside an N-type Silicon semiconductor crystal. The</span>
+<span class="comment">%effective mass of the electrons is given by multiplying its rest mass</span>
+<span class="comment">%(9.109x10^-31kg)electron by a coefficient. Once the rest mass is found</span>
+<span class="comment">%(2.36634e-31)kg, the thermal velocity can be solved. The thermal</span>
+<span class="comment">%velocity will be solved for a temperature of 300 kelvin. This thermal velocity</span>
+<span class="comment">%is approximately 1.3 e+5 m/s. If we assume electrons collide every</span>
+<span class="comment">%0.2ps, the estimated mean free path for each electron is 2.3e-10</span>
+<span class="comment">%meters. This script will simply showcase the movement of electrons in a</span>
+<span class="comment">%frame of 200nm x 100nm. The electrons will reflect off the top and bottom</span>
+<span class="comment">%edge of the frame with a reflection angle equal to its incident angle.</span>
+<span class="comment">%When an electron passes through either side edge (left or right) it will</span>
+<span class="comment">%be translated to the opposite edge and its velocity (trajectory included)</span>
+<span class="comment">%will be maintained. The more particles used in this Monte Carlo</span>
+<span class="comment">%simulation will increase the precision of the outputted arguments in this</span>
+<span class="comment">%section.</span>
+
+<span class="comment">%This simulation will contain scattering events. The scattering event is</span>
+<span class="comment">%described by an exponential scattering distribution. Therefore there is a</span>
+<span class="comment">%probability that the particles will scatter during each iteration of the</span>
+<span class="comment">%movie. The larger the time step (dt), the larger the probability that a</span>
+<span class="comment">%scattering event will occur.</span>
+
+<span class="comment">%The instantaneous average temperature will not be eqaul to 300k since the</span>
+<span class="comment">%velocities were randomly assigned using a Maxwell-Boltzmann distribution.</span>
+<span class="comment">%This distribution was achieved by assigning each coordinate velocity a</span>
+<span class="comment">%a value from a normal distribution with a standard deviation of the</span>
+<span class="comment">%thermal velocity. Each coordinate velocity has to be divided by square</span>
+<span class="comment">%root of two so that its combined velocity (Vrms) is near the thermal velocity.</span>
+
+<span class="comment">%The more particles used in the part, the closer the mean Vrms will be to</span>
+<span class="comment">%the thermal velocity. Therefore the more particles used, the closer the</span>
+<span class="comment">%temperature will be to 300k, and the closer the measured mean free path</span>
+<span class="comment">%will be to the expected mean free path.</span>
+
+<span class="comment">%The running average temperature will approach 300k as more iterations are</span>
+<span class="comment">%performed.</span>
+
+<span class="comment">%This simulation will contain two boxes which will act as conductive</span>
+<span class="comment">%material. Therefore the free moving electrons will not enter either of the</span>
+<span class="comment">%two boxes. The particles will reflect off a box with either diffusive or</span>
+<span class="comment">%specular behaviour. When specular behaviour is used, the particles will</span>
+<span class="comment">%reflect off an edge of the box with an angle of reflection equal to its</span>
+<span class="comment">%angle of incidence. The magnitude of the velocity would be maintained. For</span>
+<span class="comment">%diffusive boundaries, the particle is re-thermalized when colliding with</span>
+<span class="comment">%the box. Thus, it will reflect with a reflection angle (most likely)</span>
+<span class="comment">%different than its incident angle and the magnitude of the velocity (most</span>
+<span class="comment">%likely) will be different too.</span>
+
+<span class="comment">%This simulation will conclude with two surface maps. One map will display</span>
+<span class="comment">%where the electrons are most concentrated in the frame. The second map</span>
+<span class="comment">%will display the varying temperature within the frame. If the meshgrid</span>
+<span class="comment">%perfectly wraps around the two boxes, the two regions defined within the box</span>
+<span class="comment">%boundaries should be equal to zero.</span>
+
+    clc
+    <span class="comment">%Mass of particles</span>
+    mo=9.109e-31;
+    m=0.26*mo;
+
+    <span class="comment">%boltzman constant</span>
+    k=1.38064e-23;
+
+
+
+    <span class="comment">%Thermal velocity</span>
+    vt=@(t) sqrt(k*t/m);
+    vth=vt(300);
+    fprintf(<span class="string">'The expected thermal velocity is %6.4f m/s \n'</span>,vt(300))
+    fprintf(<span class="string">'The expected mean time between collisions is 0.2 e-12 seconds \n'</span>)
+
+    <span class="comment">%mean time collisions is 0.2 ps</span>
+    tmn=0.2*10^-12;
+    <span class="comment">%mean free path</span>
+    mnfreepath=tmn*vt(300);
+    fprintf(<span class="string">'The expected meanfreepath is %6.4f e-08 meters \n'</span>,mnfreepath*10^8)
+    fprintf(<span class="string">'-------------------------------------------------------------\n'</span>)
+
+    <span class="comment">%Nominal Size of region is 200nm x 100nm</span>
+    l=200*10^-9;
+    w=100*10^-9;
+
+    <span class="comment">%Time step</span>
+    deltaT=7.562*10^-15;
+
+    <span class="comment">%Number of particles</span>
+    num=50;
+
+    <span class="comment">%The vertical and horizontal coordinate for each particle is generated</span>
+    vertarray=rand(num,1)*w;
+    horarray=rand(num,1)*l;
+
+
+
+    <span class="comment">%Question 2 related: The boundaries of the two squares can be specular</span>
+    <span class="comment">%(==1) or diffusive (==0). Lets make the boxes have diffusive boundary</span>
+    <span class="comment">%conditions for the example:</span>
+
+    specbounds=0;
+
+    <span class="comment">%Question 1 related: Ensure no particles start inside either of the two boxes</span>
+    good=0;
+    <span class="keyword">while</span>(good==0)
+        x=((horarray&lt;1.1*l/2 &amp; horarray&gt;0.9*l/2) &amp; (vertarray&lt;w/3 | vertarray&gt;2*w/3));
+        vertarray(x)=rand()*w;
+        horarray(x)=rand()*l;
+        <span class="keyword">if</span>(sum(x)==0)
+            good=1;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="comment">%Two arrays are used to store each particles previous coordinate</span>
+    prh=horarray();
+    prv=vertarray();
+
+    <span class="comment">%Array of random velocities for each particle</span>
+    vx=randn(num,1).*vth/sqrt(2);
+    vy=randn(num,1).*vth/sqrt(2);
+
+    <span class="comment">%Array will store the total velocity of each particle</span>
+    vrms=sqrt(vx.^2 + vy.^2);
+
+    <span class="comment">%counters and sums for 'average-particle calculations' in the for-loop</span>
+    count=0;
+    total=0;
+    numberofCol=0;
+    check=0;
+    sumtemp=0;
+    totalvel=mean(vrms);
+
+    <span class="comment">%movie runs for 400 iterations</span>
+    <span class="keyword">for</span> i=1:400
+
+        <span class="comment">%Horizontal boundary conditions</span>
+        horarray(horarray&gt;=1)=horarray(horarray&gt;=1)-l;
+        horarray(horarray&lt;=0)=horarray(horarray&lt;=0)+l;
+
+        <span class="comment">%vertical boundary conditions</span>
+        IT=(vertarray&gt;=w);
+        vy(IT)=-vy(IT);
+        IT=(vertarray&lt;=0);
+        vy(IT)=-vy(IT);
+
+        <span class="comment">%store previous coordinate for each particle</span>
+        prh=horarray();
+        prv=vertarray();
+
+        <span class="comment">%update coordinate for each particle using its x- and y- velocities</span>
+        horarray=horarray+vx.*deltaT;
+        vertarray=vertarray+vy.*deltaT;
+
+        <span class="comment">%Question 1 related: check to see if particles are within either of</span>
+        <span class="comment">%the two boxes</span>
+        x=((horarray&lt;1.1*l/2 &amp; horarray&gt;0.9*l/2) &amp;(vertarray&lt;w/3 | vertarray&gt;2*w/3));
+
+        <span class="comment">%Question 2 related: Specular boundaries are in effect</span>
+
+        <span class="keyword">if</span>(specbounds==1 &amp; sum(x)~=0)
+            <span class="comment">%Was this 'x' (singular or plural) particle's previous position between the two boxes</span>
+            <span class="keyword">if</span>((prh(x)&lt;1.1*l/2 &amp; prh(x)&gt;0.9*l/2))
+                vy(x)=-vy(x);
+            <span class="keyword">else</span> <span class="comment">%otherwise it's likely that it is making contact on the side of a box</span>
+                vx(x)=-vx(x);
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span>(specbounds==0 &amp;&amp; sum(x)~=0)
+            <span class="comment">%Question 2 related: Diffusive boundaries are in effect (specbounds==0)</span>
+
+            <span class="keyword">if</span>((prh(x)&lt;1.1*l/2 &amp; prh(x)&gt;0.9*l/2) &amp; vy(x)&gt;0)
+                vertarray(x)=vertarray(x)-2*(vertarray(x)+2*w/3);
+                vx(x)=randn().*vth/sqrt(2);
+                vy(x)=-abs(randn().*vth/sqrt(2));
+
+            <span class="keyword">elseif</span>((prh(x)&lt;1.1*l/2 &amp; prh(x)&gt;0.9*l/2) &amp; vy(x)&lt;0)
+                vertarray(x)=vertarray(x)+2*(w/3-vertarray(x));
+                vx(x)=randn().*vth/sqrt(2);
+                vy(x)=abs(randn().*vth/sqrt(2));
+
+            <span class="keyword">elseif</span>(vx(x)&gt;0)
+                horarray(x)=horarray(x)-2*(horarray(x)-0.9*l/2);
+                vx(x)=-abs(randn().*vth/sqrt(2));
+                vy(x)=randn().*vth/sqrt(2);
+
+            <span class="keyword">else</span>
+                horarray(x)=horarray(x)+2*(1.1*l/2-horarray(x));
+                vx(x)=abs(randn().*vth/sqrt(2));
+                vy(x)=abs(randn().*vth/sqrt(2));
+
+            <span class="keyword">end</span>
+            rms=sqrt(vx.^2+vy.^2);
+        <span class="keyword">end</span>
+
+        <span class="comment">%Check for the scattering event</span>
+        pscat=1-exp(-deltaT/(0.2*10^-12));
+        a=rand();
+
+        <span class="keyword">if</span>(a&lt;=pscat)
+            check=1;
+            numberofCol=numberofCol+1;
+            diff=i-count;
+            count=i;
+            timebtwCol=diff*deltaT;
+            total=total+timebtwCol;
+            avgTime=total/numberofCol;<span class="comment">%Running average mean time</span>
+            ave=mean(vrms); <span class="comment">%Current Average velocity of particles</span>
+            totalvel=totalvel+ave;
+            averageMFP=avgTime*(totalvel/numberofCol); <span class="comment">%Running Mean Free Path</span>
+
+            <span class="comment">%reassign each particle a new velocities</span>
+            vx=randn(num,1).*vth/sqrt(2);
+            vy=randn(num,1).*vth/sqrt(2);
+            vrms=sqrt(vx.^2+vy.^2);
+
+
+        <span class="keyword">end</span>
+
+        <span class="comment">%Comment out temperature plot for this part of assignment</span>
+        Temp=m*mean(vrms.^2)/k;
+        sumtemp=sumtemp+Temp;
+        avgtemp=sumtemp/i;
+
+<span class="comment">        %{
+</span><span class="comment">        subplot(2,1,2)
+</span><span class="comment">        plot(i*deltaT,Temp,'+')
+</span><span class="comment">        title(['Temperature (Average Temp =' num2str(avgtemp),'kelvin)']);
+</span><span class="comment">        ylabel('Temperature (kelvin)')
+</span><span class="comment">        xlabel('Time')
+</span><span class="comment">        hold on
+</span><span class="comment">
+</span><span class="comment">        subplot(2,1,1)
+</span><span class="comment">        %}
+</span>
+        <span class="comment">%Plot the movement of the particles. The running average MFP should be</span>
+        <span class="comment">%displayed once a scattering event has occured.</span>
+
+        plot(horarray, vertarray,<span class="string">'.'</span>,<span class="string">'MarkerSize'</span>, 0.1)
+        <span class="keyword">if</span>(check==1)
+            title([<span class="string">'Movement of Electrons (MFP='</span> num2str(averageMFP),<span class="string">'meters)'</span>]);
+
+        <span class="keyword">else</span>
+            title(<span class="string">'Movement of Electrons'</span>)
+
+        <span class="keyword">end</span>
+
+        xlim([0 l])
+        ylim([0 w])
+
+        <span class="comment">%Question 1 related: Create the boxes onto the frame</span>
+        <span class="comment">%Box 1</span>
+        line([0.9*l/2 0.9*l/2],[w 2*w/3])
+        line([1.1*l/2 1.1*l/2],[w 2*w/3])
+        line([0.9*l/2 1.1*l/2],[w w])
+        line([0.9*l/2 1.1*l/2],[2*w/3 2*w/3])
+
+        <span class="comment">%Box 2</span>
+        line([0.9*l/2 0.9*l/2],[0 w/3])
+        line([1.1*l/2 1.1*l/2],[0 w/3])
+        line([0.9*l/2 1.1*l/2],[0 0])
+        line([0.9*l/2 1.1*l/2],[w/3 w/3])
+        hold <span class="string">on</span>
+        pause(0.01)
+
+
+
+    <span class="keyword">end</span>
+    <span class="comment">%End the movie</span>
+
+    <span class="comment">%Plot a histogram, only of the total velocity for this part of assignment</span>
+    figure (3)
+    hist(vrms, 10)
+    title(<span class="string">'Velocity Histogram'</span>)
+    xlabel(<span class="string">'Velocity'</span>)
+    ylabel(<span class="string">'Frequency'</span>)
+
+
+    <span class="comment">%Question 3 and 4 related: Create density and temperature map</span>
+
+    <span class="comment">%Establish the grid to divide up the frame</span>
+    [binx,biny]=meshgrid(0:l/10:l,0:w/10:w);
+
+    <span class="comment">%This array will count the number of particles in each division of the frame</span>
+    zcheck=zeros(11,11);
+
+    <span class="comment">%This array will store the average temperature in each division of the frame</span>
+    tempcheck=zeros(11,11);
+    counter=0;
+    vtotal=0;
+
+    <span class="comment">%Cycle through each division of the frame</span>
+    <span class="keyword">for</span> i=1:10
+        txmn=binx(1,i);
+        txmx=binx(1,i+1);
+        <span class="keyword">for</span> r =1:10
+            tymn=biny(r,1);
+            tymx=biny(r+1,1);
+
+            <span class="comment">%Cycle through each particle</span>
+            <span class="keyword">for</span> mm=1:num
+                <span class="comment">%Check to see if particle is within this division of the frame</span>
+                <span class="keyword">if</span>((horarray(mm)&gt;txmn &amp; horarray(mm)&lt;txmx) &amp; vertarray(mm)&lt;tymx &amp; vertarray(mm)&gt;tymn)
+                    counter=counter+1;
+                    zcheck(i,r)=zcheck(i,r)+1;
+                    vtotal=vtotal+sqrt(vx(mm)^2+vy(mm)^2);
+                    <span class="keyword">if</span>(counter~=0)
+                        tempcheck(i,r)=m*(vtotal^2)/(counter*k);
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            vtotal=0;
+            counter=0;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="comment">%Question 3: Plot the electron density map</span>
+    figure(5)
+    surf(binx,biny,zcheck)
+    title(<span class="string">'Final Position Electron Density Map'</span>)
+    zlabel(<span class="string">'Number of Electrons in Section'</span>)
+
+    <span class="comment">%Question 4: Plot the temperature map</span>
+    figure(6)
+    surf(binx,biny,tempcheck)
+    title(<span class="string">'Final Temperature Density Map'</span>)
+    zlabel(<span class="string">'Temperature in Section'</span>)
+
+    fprintf(<span class="string">'The estimated temperature is %6.4f kelvin \n'</span>,avgtemp)
+    fprintf(<span class="string">'The estimated mean free path is %6.4f e-08 meter \n'</span>,averageMFP*10^8)
+    fprintf(<span class="string">'The estimated mean time between collisions is %6.4f e-12 seconds \n'</span>,avgTime*10^12)
+</pre><pre class="codeoutput">The expected thermal velocity is 132244.8682 m/s 
+The expected mean time between collisions is 0.2 e-12 seconds 
+The expected meanfreepath is 2.6449 e-08 meters 
+-------------------------------------------------------------
+The estimated temperature is 293.0139 kelvin 
+The estimated mean free path is 1.8622 e-08 meter 
+The estimated mean time between collisions is 0.1478 e-12 seconds 
+</pre><img vspace="5" hspace="5" src="assignment1part3_01.png" alt=""> <img vspace="5" hspace="5" src="assignment1part3_02.png" alt=""> <img vspace="5" hspace="5" src="assignment1part3_03.png" alt=""> <img vspace="5" hspace="5" src="assignment1part3_04.png" alt=""> <p><b>%%Summary:</b></p><pre class="codeinput"><span class="comment">%The movie continues to run smoothly. The diffusive behaviour of the boxes</span>
+<span class="comment">%restricts the particles from entering. No particles are initialized within</span>
+<span class="comment">%either of the two boxes. The particles reflect off the boxes with an</span>
+<span class="comment">%incident angle different then it's reflective angle (diffusive). However</span>
+<span class="comment">%when specular behaviour is used, the particles do reflect off the boxes</span>
+<span class="comment">%with an incident angle equal to it's reflective angle. The surface plots</span>
+<span class="comment">%were generated. Since the meshgrid didnt perfectly wrap around the two boxes,</span>
+<span class="comment">%some electrons appear to be located inside the two boxes on the denstiy</span>
+<span class="comment">%map. This also occurs in the temperature map. If the boxes had aligned</span>
+<span class="comment">%perfectly with the meshgrid, then these two regions would be more obvious</span>
+<span class="comment">%on the two surface plots. Their temperature and electron density should be</span>
+<span class="comment">%zero in these regions. Overall, this simulation was a success.</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%%               *Assignment#1-Part 3:Enhancements*
+%
+%Jason Gazo (100975245)                                  Date: Feb/04/2018
+%
+% *%%Introduction*
+%The purpose of this part of the experiment is to observe the movement of
+%electrons moving inside an N-type Silicon semiconductor crystal. The
+%effective mass of the electrons is given by multiplying its rest mass 
+%(9.109x10^-31kg)electron by a coefficient. Once the rest mass is found
+%(2.36634e-31)kg, the thermal velocity can be solved. The thermal
+%velocity will be solved for a temperature of 300 kelvin. This thermal velocity
+%is approximately 1.3 e+5 m/s. If we assume electrons collide every
+%0.2ps, the estimated mean free path for each electron is 2.3e-10
+%meters. This script will simply showcase the movement of electrons in a
+%frame of 200nm x 100nm. The electrons will reflect off the top and bottom
+%edge of the frame with a reflection angle equal to its incident angle.
+%When an electron passes through either side edge (left or right) it will
+%be translated to the opposite edge and its velocity (trajectory included)
+%will be maintained. The more particles used in this Monte Carlo
+%simulation will increase the precision of the outputted arguments in this
+%section.
+
+%This simulation will contain scattering events. The scattering event is
+%described by an exponential scattering distribution. Therefore there is a
+%probability that the particles will scatter during each iteration of the
+%movie. The larger the time step (dt), the larger the probability that a
+%scattering event will occur. 
+
+%The instantaneous average temperature will not be eqaul to 300k since the
+%velocities were randomly assigned using a Maxwell-Boltzmann distribution.
+%This distribution was achieved by assigning each coordinate velocity a
+%a value from a normal distribution with a standard deviation of the
+%thermal velocity. Each coordinate velocity has to be divided by square
+%root of two so that its combined velocity (Vrms) is near the thermal velocity.
+
+%The more particles used in the part, the closer the mean Vrms will be to
+%the thermal velocity. Therefore the more particles used, the closer the
+%temperature will be to 300k, and the closer the measured mean free path
+%will be to the expected mean free path.
+
+%The running average temperature will approach 300k as more iterations are
+%performed. 
+
+%This simulation will contain two boxes which will act as conductive
+%material. Therefore the free moving electrons will not enter either of the
+%two boxes. The particles will reflect off a box with either diffusive or
+%specular behaviour. When specular behaviour is used, the particles will
+%reflect off an edge of the box with an angle of reflection equal to its
+%angle of incidence. The magnitude of the velocity would be maintained. For
+%diffusive boundaries, the particle is re-thermalized when colliding with
+%the box. Thus, it will reflect with a reflection angle (most likely)
+%different than its incident angle and the magnitude of the velocity (most
+%likely) will be different too. 
+
+%This simulation will conclude with two surface maps. One map will display
+%where the electrons are most concentrated in the frame. The second map
+%will display the varying temperature within the frame. If the meshgrid
+%perfectly wraps around the two boxes, the two regions defined within the box
+%boundaries should be equal to zero. 
+
+    clc
+    %Mass of particles
+    mo=9.109e-31;
+    m=0.26*mo;
+
+    %boltzman constant
+    k=1.38064e-23;
+
+
+
+    %Thermal velocity
+    vt=@(t) sqrt(k*t/m);
+    vth=vt(300);
+    fprintf('The expected thermal velocity is %6.4f m/s \n',vt(300))
+    fprintf('The expected mean time between collisions is 0.2 e-12 seconds \n')
+
+    %mean time collisions is 0.2 ps
+    tmn=0.2*10^-12;
+    %mean free path
+    mnfreepath=tmn*vt(300);
+    fprintf('The expected meanfreepath is %6.4f e-08 meters \n',mnfreepath*10^8)
+    fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+
+    %Nominal Size of region is 200nm x 100nm
+    l=200*10^-9;
+    w=100*10^-9;
+
+    %Time step
+    deltaT=7.562*10^-15;
+
+    %Number of particles
+    num=50;
+
+    %The vertical and horizontal coordinate for each particle is generated
+    vertarray=rand(num,1)*w;
+    horarray=rand(num,1)*l;
+
+
+
+    %Question 2 related: The boundaries of the two squares can be specular 
+    %(==1) or diffusive (==0). Lets make the boxes have diffusive boundary
+    %conditions for the example:
+
+    specbounds=0;
+
+    %Question 1 related: Ensure no particles start inside either of the two boxes
+    good=0;
+    while(good==0)
+        x=((horarray<1.1*l/2 & horarray>0.9*l/2) & (vertarray<w/3 | vertarray>2*w/3));
+        vertarray(x)=rand()*w;
+        horarray(x)=rand()*l;
+        if(sum(x)==0)
+            good=1;
+        end
+    end
+
+    %Two arrays are used to store each particles previous coordinate
+    prh=horarray();
+    prv=vertarray();
+
+    %Array of random velocities for each particle
+    vx=randn(num,1).*vth/sqrt(2);
+    vy=randn(num,1).*vth/sqrt(2);
+
+    %Array will store the total velocity of each particle
+    vrms=sqrt(vx.^2 + vy.^2);
+
+    %counters and sums for 'average-particle calculations' in the for-loop
+    count=0;
+    total=0;
+    numberofCol=0;
+    check=0;
+    sumtemp=0;
+    totalvel=mean(vrms);
+    
+    %movie runs for 400 iterations
+    for i=1:400
+    
+        %Horizontal boundary conditions
+        horarray(horarray>=1)=horarray(horarray>=1)-l;
+        horarray(horarray<=0)=horarray(horarray<=0)+l;
+    
+        %vertical boundary conditions
+        IT=(vertarray>=w);
+        vy(IT)=-vy(IT);
+        IT=(vertarray<=0);
+        vy(IT)=-vy(IT);
+    
+        %store previous coordinate for each particle
+        prh=horarray();
+        prv=vertarray();
+    
+        %update coordinate for each particle using its x- and y- velocities
+        horarray=horarray+vx.*deltaT;
+        vertarray=vertarray+vy.*deltaT;
+    
+        %Question 1 related: check to see if particles are within either of
+        %the two boxes
+        x=((horarray<1.1*l/2 & horarray>0.9*l/2) &(vertarray<w/3 | vertarray>2*w/3));
+    
+        %Question 2 related: Specular boundaries are in effect 
+    
+        if(specbounds==1 & sum(x)~=0)
+            %Was this 'x' (singular or plural) particle's previous position between the two boxes
+            if((prh(x)<1.1*l/2 & prh(x)>0.9*l/2))
+                vy(x)=-vy(x);
+            else %otherwise it's likely that it is making contact on the side of a box
+                vx(x)=-vx(x);
+            end
+     
+        elseif(specbounds==0 && sum(x)~=0)
+            %Question 2 related: Diffusive boundaries are in effect (specbounds==0)
+        
+            if((prh(x)<1.1*l/2 & prh(x)>0.9*l/2) & vy(x)>0)
+                vertarray(x)=vertarray(x)-2*(vertarray(x)+2*w/3);
+                vx(x)=randn().*vth/sqrt(2);
+                vy(x)=-abs(randn().*vth/sqrt(2));
+            
+            elseif((prh(x)<1.1*l/2 & prh(x)>0.9*l/2) & vy(x)<0)
+                vertarray(x)=vertarray(x)+2*(w/3-vertarray(x));
+                vx(x)=randn().*vth/sqrt(2);
+                vy(x)=abs(randn().*vth/sqrt(2));
+            
+            elseif(vx(x)>0)
+                horarray(x)=horarray(x)-2*(horarray(x)-0.9*l/2);
+                vx(x)=-abs(randn().*vth/sqrt(2));
+                vy(x)=randn().*vth/sqrt(2);
+            
+            else
+                horarray(x)=horarray(x)+2*(1.1*l/2-horarray(x));
+                vx(x)=abs(randn().*vth/sqrt(2));
+                vy(x)=abs(randn().*vth/sqrt(2));
+            
+            end
+            rms=sqrt(vx.^2+vy.^2);  
+        end
+    
+        %Check for the scattering event 
+        pscat=1-exp(-deltaT/(0.2*10^-12));
+        a=rand();
+    
+        if(a<=pscat)
+            check=1;
+            numberofCol=numberofCol+1;
+            diff=i-count;
+            count=i;
+            timebtwCol=diff*deltaT;
+            total=total+timebtwCol;
+            avgTime=total/numberofCol;%Running average mean time
+            ave=mean(vrms); %Current Average velocity of particles
+            totalvel=totalvel+ave;
+            averageMFP=avgTime*(totalvel/numberofCol); %Running Mean Free Path
+        
+            %reassign each particle a new velocities
+            vx=randn(num,1).*vth/sqrt(2);
+            vy=randn(num,1).*vth/sqrt(2);
+            vrms=sqrt(vx.^2+vy.^2);
+        
+        
+        end
+        
+        %Comment out temperature plot for this part of assignment
+        Temp=m*mean(vrms.^2)/k;
+        sumtemp=sumtemp+Temp;
+        avgtemp=sumtemp/i;
+    
+        %{
+        subplot(2,1,2)
+        plot(i*deltaT,Temp,'+')
+        title(['Temperature (Average Temp =' num2str(avgtemp),'kelvin)']);
+        ylabel('Temperature (kelvin)')
+        xlabel('Time')
+        hold on
+    
+        subplot(2,1,1)
+        %}
+    
+        %Plot the movement of the particles. The running average MFP should be
+        %displayed once a scattering event has occured. 
+    
+        plot(horarray, vertarray,'.','MarkerSize', 0.1)
+        if(check==1)
+            title(['Movement of Electrons (MFP=' num2str(averageMFP),'meters)']);
+        
+        else
+            title('Movement of Electrons')
+    
+        end
+    
+        xlim([0 l])
+        ylim([0 w])
+    
+        %Question 1 related: Create the boxes onto the frame 
+        %Box 1 
+        line([0.9*l/2 0.9*l/2],[w 2*w/3])
+        line([1.1*l/2 1.1*l/2],[w 2*w/3])
+        line([0.9*l/2 1.1*l/2],[w w])
+        line([0.9*l/2 1.1*l/2],[2*w/3 2*w/3])
+   
+        %Box 2
+        line([0.9*l/2 0.9*l/2],[0 w/3])
+        line([1.1*l/2 1.1*l/2],[0 w/3])
+        line([0.9*l/2 1.1*l/2],[0 0])
+        line([0.9*l/2 1.1*l/2],[w/3 w/3])
+        hold on
+        pause(0.01)
+    
+    
+    
+    end
+    %End the movie 
+
+    %Plot a histogram, only of the total velocity for this part of assignment 
+    figure (3)
+    hist(vrms, 10)
+    title('Velocity Histogram')
+    xlabel('Velocity')
+    ylabel('Frequency')
+
+
+    %Question 3 and 4 related: Create density and temperature map
+
+    %Establish the grid to divide up the frame
+    [binx,biny]=meshgrid(0:l/10:l,0:w/10:w);
+
+    %This array will count the number of particles in each division of the frame
+    zcheck=zeros(11,11);
+
+    %This array will store the average temperature in each division of the frame
+    tempcheck=zeros(11,11);
+    counter=0;
+    vtotal=0;
+
+    %Cycle through each division of the frame
+    for i=1:10
+        txmn=binx(1,i);
+        txmx=binx(1,i+1);
+        for r =1:10
+            tymn=biny(r,1);
+            tymx=biny(r+1,1);
+        
+            %Cycle through each particle
+            for mm=1:num
+                %Check to see if particle is within this division of the frame
+                if((horarray(mm)>txmn & horarray(mm)<txmx) & vertarray(mm)<tymx & vertarray(mm)>tymn)
+                    counter=counter+1;
+                    zcheck(i,r)=zcheck(i,r)+1;
+                    vtotal=vtotal+sqrt(vx(mm)^2+vy(mm)^2);
+                    if(counter~=0)
+                        tempcheck(i,r)=m*(vtotal^2)/(counter*k);
+                    end
+                end
+            end
+            vtotal=0;
+            counter=0;
+        end
+    end
+
+    %Question 3: Plot the electron density map
+    figure(5)
+    surf(binx,biny,zcheck)
+    title('Final Position Electron Density Map')
+    zlabel('Number of Electrons in Section')
+
+    %Question 4: Plot the temperature map
+    figure(6)
+    surf(binx,biny,tempcheck)
+    title('Final Temperature Density Map')
+    zlabel('Temperature in Section')
+
+    fprintf('The estimated temperature is %6.4f kelvin \n',avgtemp)
+    fprintf('The estimated mean free path is %6.4f e-08 meter \n',averageMFP*10^8)
+    fprintf('The estimated mean time between collisions is %6.4f e-12 seconds \n',avgTime*10^12)
+
+    %%
+    % *%%Summary:*
+%The movie continues to run smoothly. The diffusive behaviour of the boxes
+%restricts the particles from entering. No particles are initialized within
+%either of the two boxes. The particles reflect off the boxes with an
+%incident angle different then it's reflective angle (diffusive). However
+%when specular behaviour is used, the particles do reflect off the boxes
+%with an incident angle equal to it's reflective angle. The surface plots
+%were generated. Since the meshgrid didnt perfectly wrap around the two boxes,
+%some electrons appear to be located inside the two boxes on the denstiy
+%map. This also occurs in the temperature map. If the boxes had aligned
+%perfectly with the meshgrid, then these two regions would be more obvious
+%on the two surface plots. Their temperature and electron density should be
+%zero in these regions. Overall, this simulation was a success. 
+##### SOURCE END #####
+--></body></html>

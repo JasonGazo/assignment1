@@ -1,0 +1,533 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Assignment#1-Part 2:Collisions with Mean Free Path (MFP)</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-02-04"><meta name="DC.source" content="assignment1part2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1><b>Assignment#1-Part 2:Collisions with Mean Free Path (MFP)</b></h1><pre class="codeinput"><span class="comment">%Jason Gazo (100975245)                                  Date: Feb/04/2018</span>
+
+<span class="comment">%</span>
+<span class="comment">% *%%Introduction*</span>
+<span class="comment">%The purpose of this part of the experiment is to observe the movement of</span>
+<span class="comment">%electrons moving inside an N-type Silicon semiconductor crystal. The</span>
+<span class="comment">%effective mass of the electrons is given by multiplying its rest mass</span>
+<span class="comment">%(9.109x10^-31kg)by a coefficient. Once the rest mass is found</span>
+<span class="comment">%(2.36634e-31)kg, the thermal velocity can be solved. The thermal</span>
+<span class="comment">%velocity will be solved for a temperature of 300 kelvin. This thermal velocity</span>
+<span class="comment">%is approximately 1.3 e+5 m/s. If we assume electrons collide every</span>
+<span class="comment">%0.2ps, the estimated mean free path for each electron is 2.3e-10</span>
+<span class="comment">%meters. This script will simply showcase the movement of electrons in a</span>
+<span class="comment">%frame of 200nm x 100nm. The electrons will reflect off the top and bottom</span>
+<span class="comment">%edge of the frame with a reflection angle equal to its incident angle.</span>
+<span class="comment">%When an electron passes through either side edge (left or right) it will</span>
+<span class="comment">%be translated to the opposite edge and its velocity (trajectory included)</span>
+<span class="comment">%will be maintained. The more particles used in this Monte Carlo</span>
+<span class="comment">%simulation will increase the precision of the outputted arguments in this</span>
+<span class="comment">%section.</span>
+
+<span class="comment">%This simulation will contain scattering events. The scattering event is</span>
+<span class="comment">%described by an exponential scattering distribution. Therefore there is a</span>
+<span class="comment">%probability that the particles will scatter during each iteration of the</span>
+<span class="comment">%movie. The larger the time step (dt), the larger the probability that a</span>
+<span class="comment">%scattering event will occur.</span>
+
+<span class="comment">%The instantaneous average temperature will not be eqaul to 300k since the</span>
+<span class="comment">%velocities were randomly assigned using a Maxwell-Boltzmann distribution.</span>
+<span class="comment">%This distribution was achieved by assigning each coordinate velocity a</span>
+<span class="comment">%a value from a normal distribution with a standard deviation of the</span>
+<span class="comment">%thermal velocity. Each coordinate velocity has to be divided by square</span>
+<span class="comment">%root of two so that its combined velocity (Vrms) is near the thermal velocity.</span>
+
+<span class="comment">%The more particles used in the cycle, the closer the mean Vrms will be to</span>
+<span class="comment">%the thermal velocity. Therefore the more particles used, the closer the</span>
+<span class="comment">%temperature will be to 300k, and the closer the measured mean free path</span>
+<span class="comment">%will be to the expected mean free path.</span>
+
+<span class="comment">%The running average temperature will approach 300k as more iterations are</span>
+<span class="comment">%performed.</span>
+</pre><p><b>Code:</b></p><pre class="codeinput">    clc
+
+
+    <span class="comment">%effective mass of electrons =mn</span>
+    <span class="comment">%rest mass mo in kg</span>
+    mo=9.109*10^-31;
+    m=0.26*mo;
+
+    <span class="comment">%Botlzmann constant</span>
+    k=1.38064*10^-23;
+
+    <span class="comment">%Nominal size of region is 200nmx100nm</span>
+    vt=@(t) sqrt(k*t/m);
+    vth= vt(300);
+
+    fprintf(<span class="string">'The expected thermal velocity is %6.4f m/s \n'</span>,vt(300))
+    fprintf(<span class="string">'The expected mean time between collisions is 0.200e-12 seconds\n'</span>)
+
+
+    <span class="comment">%mean time collisions is 0.2 ps</span>
+    tmn=0.2*10^-12;
+
+    <span class="comment">%mean free path</span>
+    mnfreepath=tmn*vt(300);
+    fprintf(<span class="string">'The expected mean free path is %6.4f e-08 meters\n'</span>,mnfreepath*10^8)
+    fprintf(<span class="string">'-----------------------------------------------------------\n'</span>)
+
+    <span class="comment">%Set frame size</span>
+    w=200*10^-9;
+    l=100*10^-9;
+
+    <span class="comment">%set time step</span>
+    deltaT=7.562*10^-15;
+
+    <span class="comment">%Number of particles</span>
+    num=30;
+
+    <span class="comment">%Randomly initialize each particle's coordinates in the frame.</span>
+    vertarray=rand(num,1)*w;
+    horarray=rand(num,1)*l;
+
+
+
+    <span class="comment">%Question 1: Randomize their velocities from Maxwell-Botzmann distribution</span>
+    <span class="comment">%The histograms are plotted after the movie is completed</span>
+    vx=randn(num,1).*vth/sqrt(2);
+    vy=randn(num,1).*vth/sqrt(2);
+    vrms=sqrt(vx.^2+vy.^2);
+
+
+    count=0;
+    total=0;
+    numberofCol=0;
+    check=0;
+    sumtemp=0;
+    totalvel=mean(vrms);
+
+    <span class="comment">%%Start the Movie and it runs for 400 iterations</span>
+    <span class="keyword">for</span> i=1:400
+
+        <span class="comment">%Horizontal Boundary conditions</span>
+        horarray(horarray&gt;=l)=horarray(horarray&gt;=l) - l;
+        horarray(horarray&lt;=0)=horarray(horarray&lt;=0)+l;
+
+        <span class="comment">%Vertical boundary conditions</span>
+        IT=(vertarray&gt;=w);
+        vy(IT)=-vy(IT);
+        IT=(vertarray&lt;=0);
+        vy(IT)=-vy(IT);
+
+        <span class="comment">%Update particle's coordinates with its respective velocities</span>
+        horarray=horarray+vx.*deltaT;
+        vertarray=vertarray+vy.*deltaT;
+
+
+
+        <span class="comment">%Question 2: Model the scattering of the electrons:</span>
+        pscat=1-exp(-deltaT/(0.2*10^-12));
+        a=rand();
+
+        <span class="comment">%Scattering event occurs:</span>
+        <span class="keyword">if</span> (a&lt;pscat)
+            check=1;
+
+            <span class="comment">%Question 4: Measure the mean time, and solve for mean free path:</span>
+            numberofCol=numberofCol+1;
+            diff=i-count;
+            count=i;
+            timebtwCol=diff*deltaT;
+            total=total+timebtwCol; <span class="comment">% Total = Current time - time of first scatter</span>
+            avgTime=total/numberofCol; <span class="comment">%Average 'mean time'</span>
+            ave=mean(vrms); <span class="comment">%Current Average velocity of particles</span>
+            totalvel=totalvel+ave;
+            averageMFP=avgTime*(totalvel/numberofCol); <span class="comment">%Running Mean Free Path</span>
+
+
+
+            <span class="comment">%Particle's assigned new velocity from Maxwell-Boltzmann</span>
+            <span class="comment">%distribution</span>
+            vx=randn(num,1).*vth/sqrt(2);
+            vy=randn(num,1).*vth/sqrt(2);
+            vrms=sqrt(vx.^2+vy.^2);
+
+
+
+        <span class="keyword">end</span>
+        <span class="comment">% scattering event has finished</span>
+
+
+        <span class="comment">%Question 3:Solving for temperature, is it constant or dynamic?</span>
+        Temp=m*mean(vrms.^2)/k;
+        sumtemp=sumtemp+Temp;
+        avgtemp=sumtemp/i;
+
+        <span class="comment">%Plot the Temperature vs time (title contains running average</span>
+        <span class="comment">%temperature)</span>
+        subplot(2,1,2)
+        plot(i*deltaT,Temp,<span class="string">'+'</span>)
+        title([<span class="string">'Temperature (Average Temp='</span> num2str(avgtemp),<span class="string">'kelvin)'</span>]);
+        ylabel(<span class="string">'Temperature'</span>)
+        xlabel(<span class="string">'Time'</span>)
+        hold <span class="string">on</span>
+
+        <span class="comment">%Plot the movement of the particles. If scattering event has occured,</span>
+        <span class="comment">%the title should then display the running average of mean free path.</span>
+        subplot(2,1,1)
+        plot(horarray,vertarray,<span class="string">'.'</span>,<span class="string">'MarkerSize'</span>, 0.1)
+        <span class="keyword">if</span>(check==1)
+            title([<span class="string">'Movement of Electrons (MFP='</span> num2str(averageMFP),<span class="string">'meters)'</span>]);
+        <span class="keyword">else</span>
+            title(<span class="string">'Movement of Electrons'</span>)
+        <span class="keyword">end</span>
+
+        xlim([0 l])
+        ylim([0 w])
+        hold <span class="string">on</span>
+        pause(.01)
+
+
+    <span class="keyword">end</span>
+    <span class="comment">%Movie has ended</span>
+
+    <span class="comment">%Plot histograms for the particles velocities.</span>
+    figure(3)
+    subplot(3,1,1)
+    hist(vrms,10)
+    title(<span class="string">'Total Velocity Histogram'</span>)
+    xlabel(<span class="string">'V (m/s)'</span>)
+    ylabel(<span class="string">'Frequency'</span>)
+
+    subplot(3,1,2)
+    hist(vx,10)
+    title(<span class="string">'Horizontal Velocity Histogram'</span>)
+    xlabel(<span class="string">'V (m/s)'</span>)
+    ylabel(<span class="string">'Frequency'</span>)
+
+    subplot(3,1,3)
+    hist(vy,10)
+    title(<span class="string">'Vertical Velocity Histogram'</span>)
+    xlabel(<span class="string">'V (m/s)'</span>)
+    ylabel(<span class="string">'Frequency'</span>)
+
+    fprintf(<span class="string">'The estimated temperature is %6.4f kelvin \n'</span>,avgtemp)
+    fprintf(<span class="string">'The estimated mean free path is %6.4f e-08 meter \n'</span>,averageMFP*10^8)
+    fprintf(<span class="string">'The estimated mean time between collisions is %6.4f e-12 seconds \n'</span>,avgTime*10^12)
+</pre><pre class="codeoutput">The expected thermal velocity is 132244.8682 m/s 
+The expected mean time between collisions is 0.200e-12 seconds
+The expected mean free path is 2.6449 e-08 meters
+-----------------------------------------------------------
+The estimated temperature is 309.5196 kelvin 
+The estimated mean free path is 3.2429 e-08 meter 
+The estimated mean time between collisions is 0.2508 e-12 seconds 
+</pre><img vspace="5" hspace="5" src="assignment1part2_01.png" alt=""> <img vspace="5" hspace="5" src="assignment1part2_02.png" alt=""> <p><b>%%Summary:</b></p><pre class="codeinput"><span class="comment">%The movie continues to work,and the boundaries of the frame behave. Each</span>
+<span class="comment">%particle moves with a different velocity. However, by looking at the</span>
+<span class="comment">%total velocity histogram it is clear that the velocities are</span>
+<span class="comment">%centered about the thermal velocity. Each x- and y- coordinate velocity</span>
+<span class="comment">%follows a normal distribution centered around a velocity of zero. Since</span>
+<span class="comment">%each particle was randomly assigned a velocity, the instantaneous average</span>
+<span class="comment">%temperature wasnt equal to 300k. Plus the particles undergo scattering</span>
+<span class="comment">%events where their velocities are reassigned randomly, thus the</span>
+<span class="comment">%instantanous velocities will fluctuate over time, approximatly about 300k.</span>
+<span class="comment">%However the running average temperture of the particles will approach 300k</span>
+<span class="comment">%if the movie is run for many more iterations (say 10000) and a lot more</span>
+<span class="comment">%particles are used (say 10,000). Therefore, even though the instantaneous</span>
+<span class="comment">%average temperature isnt exactly 300k, the running average should converge</span>
+<span class="comment">%towards it. The estimated mean free path and estimated mean time were</span>
+<span class="comment">%similar to the expected mean free path and expected mean time. Overall this</span>
+<span class="comment">%simulation was a success.</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%%         *Assignment#1-Part 2:Collisions with Mean Free Path (MFP)*
+%
+%Jason Gazo (100975245)                                  Date: Feb/04/2018
+ 
+%
+% *%%Introduction*
+%The purpose of this part of the experiment is to observe the movement of
+%electrons moving inside an N-type Silicon semiconductor crystal. The
+%effective mass of the electrons is given by multiplying its rest mass 
+%(9.109x10^-31kg)by a coefficient. Once the rest mass is found
+%(2.36634e-31)kg, the thermal velocity can be solved. The thermal
+%velocity will be solved for a temperature of 300 kelvin. This thermal velocity
+%is approximately 1.3 e+5 m/s. If we assume electrons collide every
+%0.2ps, the estimated mean free path for each electron is 2.3e-10
+%meters. This script will simply showcase the movement of electrons in a
+%frame of 200nm x 100nm. The electrons will reflect off the top and bottom
+%edge of the frame with a reflection angle equal to its incident angle.
+%When an electron passes through either side edge (left or right) it will
+%be translated to the opposite edge and its velocity (trajectory included)
+%will be maintained. The more particles used in this Monte Carlo
+%simulation will increase the precision of the outputted arguments in this
+%section.
+
+%This simulation will contain scattering events. The scattering event is
+%described by an exponential scattering distribution. Therefore there is a
+%probability that the particles will scatter during each iteration of the
+%movie. The larger the time step (dt), the larger the probability that a
+%scattering event will occur. 
+
+%The instantaneous average temperature will not be eqaul to 300k since the
+%velocities were randomly assigned using a Maxwell-Boltzmann distribution.
+%This distribution was achieved by assigning each coordinate velocity a
+%a value from a normal distribution with a standard deviation of the
+%thermal velocity. Each coordinate velocity has to be divided by square
+%root of two so that its combined velocity (Vrms) is near the thermal velocity.
+
+%The more particles used in the cycle, the closer the mean Vrms will be to
+%the thermal velocity. Therefore the more particles used, the closer the
+%temperature will be to 300k, and the closer the measured mean free path
+%will be to the expected mean free path.
+
+%The running average temperature will approach 300k as more iterations are
+%performed. 
+
+%%
+%%
+% *Code:*
+
+    clc
+  
+
+    %effective mass of electrons =mn
+    %rest mass mo in kg
+    mo=9.109*10^-31;
+    m=0.26*mo;
+
+    %Botlzmann constant
+    k=1.38064*10^-23;
+
+    %Nominal size of region is 200nmx100nm
+    vt=@(t) sqrt(k*t/m);
+    vth= vt(300);
+
+    fprintf('The expected thermal velocity is %6.4f m/s \n',vt(300))
+    fprintf('The expected mean time between collisions is 0.200e-12 seconds\n')
+
+
+    %mean time collisions is 0.2 ps
+    tmn=0.2*10^-12;
+
+    %mean free path
+    mnfreepath=tmn*vt(300);
+    fprintf('The expected mean free path is %6.4f e-08 meters\n',mnfreepath*10^8)
+    fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+
+    %Set frame size
+    w=200*10^-9;
+    l=100*10^-9;
+
+    %set time step
+    deltaT=7.562*10^-15;
+
+    %Number of particles
+    num=30;
+
+    %Randomly initialize each particle's coordinates in the frame.
+    vertarray=rand(num,1)*w;
+    horarray=rand(num,1)*l;
+
+
+
+    %Question 1: Randomize their velocities from Maxwell-Botzmann distribution
+    %The histograms are plotted after the movie is completed
+    vx=randn(num,1).*vth/sqrt(2);
+    vy=randn(num,1).*vth/sqrt(2);
+    vrms=sqrt(vx.^2+vy.^2);
+
+
+    count=0;
+    total=0;
+    numberofCol=0;
+    check=0;
+    sumtemp=0;
+    totalvel=mean(vrms);
+    
+    %%Start the Movie and it runs for 400 iterations
+    for i=1:400
+     
+        %Horizontal Boundary conditions
+        horarray(horarray>=l)=horarray(horarray>=l) - l;
+        horarray(horarray<=0)=horarray(horarray<=0)+l;
+    
+        %Vertical boundary conditions
+        IT=(vertarray>=w);
+        vy(IT)=-vy(IT);
+        IT=(vertarray<=0);
+        vy(IT)=-vy(IT);
+    
+        %Update particle's coordinates with its respective velocities
+        horarray=horarray+vx.*deltaT;
+        vertarray=vertarray+vy.*deltaT;
+    
+    
+    
+        %Question 2: Model the scattering of the electrons:
+        pscat=1-exp(-deltaT/(0.2*10^-12));
+        a=rand();
+    
+        %Scattering event occurs:
+        if (a<pscat)
+            check=1;
+        
+            %Question 4: Measure the mean time, and solve for mean free path:
+            numberofCol=numberofCol+1;
+            diff=i-count;
+            count=i;
+            timebtwCol=diff*deltaT; 
+            total=total+timebtwCol; % Total = Current time - time of first scatter
+            avgTime=total/numberofCol; %Average 'mean time'
+            ave=mean(vrms); %Current Average velocity of particles
+            totalvel=totalvel+ave;
+            averageMFP=avgTime*(totalvel/numberofCol); %Running Mean Free Path
+        
+        
+        
+            %Particle's assigned new velocity from Maxwell-Boltzmann
+            %distribution
+            vx=randn(num,1).*vth/sqrt(2);
+            vy=randn(num,1).*vth/sqrt(2);
+            vrms=sqrt(vx.^2+vy.^2);
+        
+        
+           
+        end
+        % scattering event has finished 
+    
+   
+        %Question 3:Solving for temperature, is it constant or dynamic?
+        Temp=m*mean(vrms.^2)/k;
+        sumtemp=sumtemp+Temp;
+        avgtemp=sumtemp/i;
+   
+        %Plot the Temperature vs time (title contains running average
+        %temperature)
+        subplot(2,1,2)
+        plot(i*deltaT,Temp,'+')
+        title(['Temperature (Average Temp=' num2str(avgtemp),'kelvin)']);
+        ylabel('Temperature')
+        xlabel('Time')
+        hold on
+   
+        %Plot the movement of the particles. If scattering event has occured,
+        %the title should then display the running average of mean free path. 
+        subplot(2,1,1)
+        plot(horarray,vertarray,'.','MarkerSize', 0.1)
+        if(check==1)
+            title(['Movement of Electrons (MFP=' num2str(averageMFP),'meters)']);
+        else
+            title('Movement of Electrons')
+        end
+        
+        xlim([0 l])
+        ylim([0 w])
+        hold on 
+        pause(.01)
+    
+   
+    end
+    %Movie has ended
+
+    %Plot histograms for the particles velocities.
+    figure(3)
+    subplot(3,1,1)
+    hist(vrms,10)
+    title('Total Velocity Histogram')
+    xlabel('V (m/s)')
+    ylabel('Frequency')
+    
+    subplot(3,1,2)
+    hist(vx,10)
+    title('Horizontal Velocity Histogram')
+    xlabel('V (m/s)')
+    ylabel('Frequency')
+    
+    subplot(3,1,3)
+    hist(vy,10)
+    title('Vertical Velocity Histogram')
+    xlabel('V (m/s)')
+    ylabel('Frequency')
+
+    fprintf('The estimated temperature is %6.4f kelvin \n',avgtemp)
+    fprintf('The estimated mean free path is %6.4f e-08 meter \n',averageMFP*10^8)
+    fprintf('The estimated mean time between collisions is %6.4f e-12 seconds \n',avgTime*10^12)
+
+    %%
+    % *%%Summary:*
+%The movie continues to work,and the boundaries of the frame behave. Each
+%particle moves with a different velocity. However, by looking at the
+%total velocity histogram it is clear that the velocities are
+%centered about the thermal velocity. Each x- and y- coordinate velocity
+%follows a normal distribution centered around a velocity of zero. Since
+%each particle was randomly assigned a velocity, the instantaneous average
+%temperature wasnt equal to 300k. Plus the particles undergo scattering
+%events where their velocities are reassigned randomly, thus the
+%instantanous velocities will fluctuate over time, approximatly about 300k.
+%However the running average temperture of the particles will approach 300k
+%if the movie is run for many more iterations (say 10000) and a lot more
+%particles are used (say 10,000). Therefore, even though the instantaneous
+%average temperature isnt exactly 300k, the running average should converge
+%towards it. The estimated mean free path and estimated mean time were
+%similar to the expected mean free path and expected mean time. Overall this
+%simulation was a success. 
+##### SOURCE END #####
+--></body></html>
